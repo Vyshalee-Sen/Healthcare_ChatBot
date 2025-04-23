@@ -5,3 +5,4 @@ faiss
 transformers
 huggingface
 pdfplumber
+Rag_llm
