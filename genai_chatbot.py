@@ -1,10 +1,22 @@
-from google import genai
+# app.py
+import streamlit as st
+from Rag_llm import load_model, get_response  # You need to define these based on your notebook
 
-client = genai.Client(api_key="AIzaSyAewX2hP6b5j7I7G657_tqEzFEnaXyv1Rc")
 
-response = client.models.generate_content(
-    model="gemini-2.0-flash",
-    contents="what are the symptoms of cancer",
-)
+# Load model and retriever (do it only once)
+@st.cache_resource
+def setup():
+    model, retriever = load_model()
+    return model, retriever
 
-print(response.text)
+model, retriever = setup()
+
+# UI
+st.title("RAG-based Question Answering App")
+
+user_query = st.text_input("Ask your question:")
+
+if user_query:
+    with st.spinner("Fetching answer..."):
+        response = get_response(user_query, model, retriever)
+        st.success(response)
